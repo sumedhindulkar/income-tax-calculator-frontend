@@ -1,23 +1,26 @@
-import logo from './logo.svg';
-import './App.css';
-
+import "./App.css";
+import React, { useEffect } from "react";
+import { Switch, Route, Redirect, useHistory } from "react-router-dom";
+import { Login, Calculator, Signup } from "./components";
+import axios from "axios";
 function App() {
+  const history = useHistory();
+  useEffect(() => {
+    const userDetails = JSON.parse(localStorage.getItem("userDetails"));
+
+    if (userDetails) {
+      const link = "/" + userDetails.user.id + "/calculator";
+      history.push(link);
+    }
+  }, [history]);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="">
+      <Switch>
+        <Route exact path="/" component={Login} />
+        <Route exact path="/:id/calculator" component={Calculator} />
+        <Route exact path="/signup" component={Signup} />
+        <Redirect from="*" to="/" />
+      </Switch>
     </div>
   );
 }
